@@ -19,7 +19,7 @@ import com.pablodeyvid.dsdeliverpdp.repositories.ProductRepository;
 @Service
 public class OrderService {
 	@Autowired
-	private OrderRepository repository;
+	private OrderRepository orderRepository;
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -29,7 +29,7 @@ public class OrderService {
 									 * só pra leitura
 									 */
 	public List<OrderDTO> findAll() {
-		List<Order> list = repository.findOrderWithProducts();
+		List<Order> list = orderRepository.findOrderWithProducts();
 
 		return list.stream().map(x -> new OrderDTO(x)).collect(Collectors.toList());
 	}
@@ -44,7 +44,15 @@ public class OrderService {
 			order.getProducts().add(product);
 		}
 		
-		order = repository.save(order);
+		order = orderRepository.save(order);
+		return new OrderDTO(order);
+	}
+	
+	@Transactional
+	public OrderDTO setDelivered(Long id) {
+		Order order = orderRepository.getOne(id);
+		order.setStatus(OrderStatus.DELIVERED);
+		order = orderRepository.save(order);
 		return new OrderDTO(order);
 	}
 }

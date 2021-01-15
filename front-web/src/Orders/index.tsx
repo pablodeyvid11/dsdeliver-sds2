@@ -59,6 +59,7 @@ function Orders() {
             isPossible = false;
         }
         if (isPossible) {
+            toast.info('Processando');
             saveOrder(payload).then((response) => {
                 toast.error(`Pedido enviado com sucesso! Nº${response.data.id}`);
                 setSelectedProducts([]);

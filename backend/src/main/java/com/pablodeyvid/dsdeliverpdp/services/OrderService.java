@@ -36,7 +36,7 @@ public class OrderService {
 
 	@Transactional
 	public OrderDTO insert(OrderDTO dto) {
-		Order order = new Order(null, dto.getAddress(), dto.getLatitude(), dto.getLatitude(), Instant.now(),
+		Order order = new Order(null, dto.getAddress(), dto.getLatitude(), dto.getLongitude(), Instant.now(),
 				OrderStatus.PENDING);
 		
 		for(ProductDTO p : dto.getProducts()) {

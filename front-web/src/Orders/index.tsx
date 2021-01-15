@@ -62,6 +62,7 @@ function Orders() {
             toast.info('Processando');
             saveOrder(payload).then((response) => {
                 toast.error(`Pedido enviado com sucesso! Nº${response.data.id}`);
+                console.log(payload);
                 setSelectedProducts([]);
             })
                 .catch(() => {
@@ -78,7 +79,9 @@ function Orders() {
                 onSelectProduct={handleSelectProduct}
                 Selectedproducts={selectedProducts}
             />
-            <OrderLocation onChangeLocation={location => setOrderLocation(location)} />
+            <OrderLocation onChangeLocation={location => {
+                setOrderLocation(location);
+            }} />
             <OrderSummary
                 amount={selectedProducts.length}
                 totalPrice={totalPrice}

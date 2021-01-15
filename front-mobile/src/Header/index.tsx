@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StyleSheet, ScrollView, Text, Alert, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { fetchOrders } from '../api';
@@ -8,10 +9,12 @@ import { Order } from '../types';
 
 function Orders() {
 
+    const isFocused = useIsFocused();
+
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
+    const fetchData = () => {
         setIsLoading(true);
         fetchOrders()
             .then((response) => {
@@ -22,8 +25,22 @@ function Orders() {
             })
             .finally(() => {
                 setIsLoading(false);
-            })
-    }, [])
+            });
+    }
+
+    useEffect(() => {
+        if(isFocused) {
+            fetchData();
+        }
+    }, [isFocused])
+
+    const navigation = useNavigation();
+
+    const handleOnPressOrder = (order: Order) => {
+        navigation.navigate('OrderDetails', {
+            order
+        });
+    }
 
     return (
         <>
@@ -35,14 +52,16 @@ function Orders() {
                         <Text style={styles.textSubtitle}>Aguarde enquanto processamos a requisição</Text>
                     </View>
                 ) : (<>
-                        <Text style={styles.textTitle}>Lista de pedidos:</Text>
-                        <Text style={styles.textSubtitle}>Selecione um pedido para efetuar a entrega</Text>
-                        {orders.map(order => (
-                            <TouchableWithoutFeedback key={order.id}>
-                                <OrderCard order={order} />
-                            </TouchableWithoutFeedback>
-                        ))}
-                    </>
+                    <Text style={styles.textTitle}>Lista de pedidos:</Text>
+                    <Text style={styles.textSubtitle}>Selecione um pedido para efetuar a entrega</Text>
+                    {orders.map(order => (
+                        <TouchableWithoutFeedback
+                            key={order.id}
+                            onPress={() => handleOnPressOrder(order)}>
+                            <OrderCard order={order} />
+                        </TouchableWithoutFeedback>
+                    ))}
+                </>
                     )}
             </ScrollView>
         </>

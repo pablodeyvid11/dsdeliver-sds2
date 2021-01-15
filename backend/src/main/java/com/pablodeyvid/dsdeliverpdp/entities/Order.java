@@ -31,11 +31,7 @@ public class Order implements Serializable {
 	private OrderStatus status;
 
 	@ManyToMany
-	@JoinTable(
-			name = "tb_order_product", 
-			joinColumns = @JoinColumn(name = "order_id"), 
-			inverseJoinColumns = @JoinColumn(name = "product_id")
-			)
+	@JoinTable(name = "tb_order_product", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private Set<Product> products = new HashSet<>();
 
 	public Order() {
@@ -92,6 +88,16 @@ public class Order implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Double getTotal() {
+		Double sum = 0.0;
+
+		for (Product p : products) {
+			sum += p.getPrice();
+		}
+
+		return sum;
 	}
 
 	public Set<Product> getProducts() {
